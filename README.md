@@ -1,2 +1,2 @@
-# elasticsearch-partitioner
+# elasticsearch-helper
 
