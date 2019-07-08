@@ -1,4 +1,4 @@
-package io.github.snowthinker.esp;
+package io.github.snowthinkder.esp.test.service;
 
 import org.elasticsearch.client.Client;
 import org.springframework.context.annotation.Bean;

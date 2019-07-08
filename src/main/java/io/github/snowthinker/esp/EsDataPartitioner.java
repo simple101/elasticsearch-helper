@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EsDataPartitioner {
 	
-	private static final String READ_INDEX_SUFFIX = "_READ";
+	public static final String READ_INDEX_SUFFIX = "_read";
 
 	private String esHttpUrl;
 	private RestTemplate restTemplate;
@@ -35,6 +35,7 @@ public class EsDataPartitioner {
 		this.restTemplate = restTemplate;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean createIndexByName(String indexName, String typeName, String month) {
 		boolean exist = checkIndexExist(indexName, typeName, month);
 		
@@ -74,6 +75,7 @@ public class EsDataPartitioner {
 	 * @param month
 	 * @return
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private boolean checkIndexExist(String indexName, String typeName, String month) {
 		String fullIndexName = indexName + month;
 		String url = this.esHttpUrl + "/" + fullIndexName;
@@ -142,6 +144,7 @@ public class EsDataPartitioner {
 		return false;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean reallocateReadAlias(AliasActionDto actionDto) {
 		String url = this.esHttpUrl + "/_aliases";
 		ResponseEntity<HashMap> responseEntity = null;
@@ -170,7 +173,7 @@ public class EsDataPartitioner {
 		return false;
 	}
 	
-	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean createReadAlias(String[] indexNames, String[] bindMonths, String[] removeMonths) {
 		String url = this.esHttpUrl + "/_aliases";
 		ResponseEntity<HashMap> responseEntity = null;
@@ -223,6 +226,7 @@ public class EsDataPartitioner {
 		return false;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Map<String, Object> queryAliasByName(String indexName) {
 		String url = this.esHttpUrl + "/_aliases/" + indexName;
 		
