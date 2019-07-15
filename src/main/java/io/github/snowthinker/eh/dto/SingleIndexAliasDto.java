@@ -1,13 +1,13 @@
-package io.github.snowthinker.esp.dto;
+package io.github.snowthinker.eh.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MultipleIndiesAliasDto {
+public class SingleIndexAliasDto {
 
-	private String[] indices;
+	private String index;
 	
 	private String alias;
 }

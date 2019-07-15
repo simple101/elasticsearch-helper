@@ -1,4 +1,4 @@
-package io.github.snowthinker.esp.dto;
+package io.github.snowthinker.eh.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

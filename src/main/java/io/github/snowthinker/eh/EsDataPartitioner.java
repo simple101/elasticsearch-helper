@@ -1,4 +1,4 @@
-package io.github.snowthinker.esp;
+package io.github.snowthinker.eh;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,11 +15,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.snowthinker.esp.dto.AddAliasDto;
-import io.github.snowthinker.esp.dto.AliasActionDto;
-import io.github.snowthinker.esp.dto.MultipleIndiesAliasDto;
-import io.github.snowthinker.esp.dto.RemoveAliasDto;
-import io.github.snowthinker.esp.dto.SingleIndexAliasDto;
+import io.github.snowthinker.eh.dto.AddAliasDto;
+import io.github.snowthinker.eh.dto.AliasActionDto;
+import io.github.snowthinker.eh.dto.MultipleIndiesAliasDto;
+import io.github.snowthinker.eh.dto.RemoveAliasDto;
+import io.github.snowthinker.eh.dto.SingleIndexAliasDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

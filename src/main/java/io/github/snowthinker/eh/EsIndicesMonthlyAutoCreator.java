@@ -1,4 +1,4 @@
-package io.github.snowthinker.esp;
+package io.github.snowthinker.eh;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.springframework.scheduling.annotation.Scheduled;
 
-import io.github.snowthinker.esp.dto.AddAliasDto;
-import io.github.snowthinker.esp.dto.AliasActionDto;
-import io.github.snowthinker.esp.dto.RemoveAliasDto;
-import io.github.snowthinker.esp.dto.SingleIndexAliasDto;
+import io.github.snowthinker.eh.dto.AddAliasDto;
+import io.github.snowthinker.eh.dto.AliasActionDto;
+import io.github.snowthinker.eh.dto.RemoveAliasDto;
+import io.github.snowthinker.eh.dto.SingleIndexAliasDto;
 
 
 public class EsIndicesMonthlyAutoCreator {
