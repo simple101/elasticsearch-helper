@@ -37,6 +37,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.core.query.SourceFilter;
 import org.springframework.util.Assert;
 
+@SuppressWarnings("deprecation")
 public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 	
 	private static final Logger QUERY_LOGGER = LoggerFactory.getLogger("org.springframework.data.elasticsearch.core.QUERY");
@@ -44,10 +45,15 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 	private static final String FIELD_SCORE = "_score";
 	
 	private Client client;
+	
+	@SuppressWarnings("unused")
 	private ElasticsearchConverter elasticsearchConverter;
+	
 	private ResultsMapper resultsMapper;
+	
 	private String searchTimeout;
 
+	
 	public CustomElasticsearchTemplate(Client client) {
 		this(client, new MappingElasticsearchConverter(new SimpleElasticsearchMappingContext()));
 	}
@@ -85,7 +91,7 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 		
 	}
 	
-	public <T> AggregatedPage<T> searchDeep(QueryBuilder query, Pageable pageable, Class<T> clazz, String... afterSearch) {
+	public <T> AggregatedPage<T> searchDeep(QueryBuilder query, Pageable pageable, Class<T> clazz, Object... afterSearch) {
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withPageable(pageable).build();
 		SearchRequestBuilder requestBuilder = prepareSearch(searchQuery, clazz);
 		
@@ -98,6 +104,7 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 		return resultsMapper.mapResults(response, clazz, pageable);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private String[] retrieveIndexNameFromPersistentEntity(Class clazz) {
 		if (clazz != null) {
 			return new String[] { getPersistentEntityFor(clazz).getIndexName() };
@@ -105,6 +112,7 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 		return null;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private String[] retrieveTypeFromPersistentEntity(Class clazz) {
 		if (clazz != null) {
 			return new String[] { getPersistentEntityFor(clazz).getIndexType() };
@@ -112,6 +120,7 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 		return null;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private void setPersistentEntityIndexAndType(Query query, Class clazz) {
 		if (query.getIndices().isEmpty()) {
 			query.addIndices(retrieveIndexNameFromPersistentEntity(clazz));
@@ -193,6 +202,7 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 		return prepareSearch(query);
 	}
 	
+	@SuppressWarnings({ "rawtypes" })
 	private SearchResponse doSearch(SearchRequestBuilder searchRequest, SearchQuery searchQuery) {
 		
 		if (searchQuery.getFilter() != null) {
@@ -241,18 +251,6 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 				searchRequest.addAggregation(aggregatedFacet.getFacet());
 			}
 		}
-		
-		// deep pagination
-		/*Sort sort = searchQuery.getSort();
-		if(null != sort && !sort.isEmpty()) {
-			Optional<Order> first = sort.get().findFirst();
-			if(null != first && first.isPresent()) {
-				Order deepSort = first.get();	
-				String name = deepSort.getProperty();
-				
-				searchRequest.searchAfter(values);
-			}
-		}*/
 		
 		return getSearchResponse(searchRequest.setQuery(searchQuery.getQuery()));
 	}
