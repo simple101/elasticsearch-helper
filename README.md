@@ -57,3 +57,7 @@ List<Item> dataList = page.get().collect(Collectors.toList());
 System.out.println(dataList);
 ~~~
 
+#### 打印DSL日志
+~~~xml
+<logger name="org.springframework.data.elasticsearch.core.QUERY" level="DEBUG"/>
+~~~
