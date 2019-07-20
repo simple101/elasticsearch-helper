@@ -1,4 +1,4 @@
-package io.github.snowthinker.eh.page;
+package io.github.snowthinker.eh.template;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 

@@ -37,7 +37,6 @@ public class EsIndicesMonthlyAutoCreator {
 	
 	/**
 	 * <p>创建当前月份offset个月的索引
-	 * @param offset 必需为负值
 	 */
 	public void checkAndCreateIndex() {
 		

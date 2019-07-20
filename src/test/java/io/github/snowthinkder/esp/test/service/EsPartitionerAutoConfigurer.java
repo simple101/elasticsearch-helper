@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
-import io.github.snowthinker.eh.dto.CustomDefaultResultMapper;
+import io.github.snowthinker.eh.template.CustomDefaultResultMapper;
 
 public class EsPartitionerAutoConfigurer {
 

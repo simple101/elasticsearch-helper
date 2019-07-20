@@ -1,4 +1,4 @@
-package io.github.snowthinker.eh.dto;
+package io.github.snowthinker.eh.template;
 
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
@@ -39,7 +39,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
+ * @author Andrew
  * <p> 重写ES查询将真实索引名称写入 document actualIndex 字段
  *
  */

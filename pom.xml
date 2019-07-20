@@ -5,7 +5,7 @@
 
 	<groupId>io.github.snowthinker</groupId>
 	<artifactId>elasticsearch-helper</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>elasticsearch-partitioner</name>
@@ -37,12 +37,34 @@
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-elasticsearch</artifactId>
 		    <version>3.1.9.RELEASE</version>
+		    <exclusions>
+		    		<exclusion>
+		    			<groupId>com.fasterxml.jackson.core</groupId>
+		    			<artifactId>jackson-core</artifactId>
+		    		</exclusion>
+		    		<exclusion>
+		    			<groupId>com.fasterxml.jackson.core</groupId>
+    					<artifactId>jackson-databind</artifactId>
+		    		</exclusion>
+		    	</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.datatype</groupId>
 		    <artifactId>jackson-datatype-jsr310</artifactId>
 		    <version>2.9.9</version>
+		    <exclusions>
+			    	<exclusion>
+			    		<groupId>com.fasterxml.jackson.core</groupId>
+			    		<artifactId>jackson-annotations</artifactId>
+			    	</exclusion>
+		    </exclusions>
 		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.9.9</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -126,7 +148,6 @@
 		</plugins>
 	</build>
 	
-	
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -136,13 +157,13 @@
 	</licenses>
 
 	<scm>
-		<url>https://github.com/snowThinker/elasticsearch-partitioner</url>
+		<url>https://github.com/snowThinker/elasticsearch-helper</url>
 	</scm>
 
 	<developers>
 		<developer>
 			<name>Andrew Wong</name>
-			<email>wj.andrew@yahoo.com</email>
+			<email>wj.andrew#yahoo.com</email>
 			<organization>snowthinker</organization>
 			<organizationUrl>https://github.com/snowThinker</organizationUrl>
 		</developer>
