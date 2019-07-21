@@ -1,15 +1,25 @@
 # elasticsearch-helper ES助手
 
-### 添加pom依赖
+## 主要功能
+
+* **ElasticsearchTemplate深度分页支持**：重写ElasticsearchTemplate支持 search after 深度分页
+* **自动创建分区及自动分区指向**：可按月分区索引，每月创建索引，自动别名指向功能
+* **Elasticsearch 读写分离**：读写分离, 读操作所有索引分区，写只操作当月索引
+
+## 如何使用
+
+### 1、添加pom依赖
+
 ~~~xml
 <dependency>
-	<groupId>io.github.snowthinker</groupId>
-	<artifactId>elasticsearch-helper</artifactId>
-	<version>0.0.1-RELEASE</version>
-</dependency>	
+    <groupId>io.github.snowthinker</groupId>
+    <artifactId>elasticsearch-helper</artifactId>
+    <version>0.0.1-RELEASE</version>
+</dependency>
 ~~~
 
-#### 初始化CustomElasticsearchTemplate
+### 2、初始化CustomElasticsearchTemplate
+
 ~~~java
 @Bean
 public CustomElasticsearchTemplate customElasticsearchTemplate(Client client) {
@@ -17,10 +27,10 @@ public CustomElasticsearchTemplate customElasticsearchTemplate(Client client) {
 }
 ~~~
 
+### 3、JavaBean编写
 
-#### JavaBean编写
 ~~~java
-@Data	
+@Data
 public class Item implements Serializable {	
 	@Id
 	private String id;
@@ -33,9 +43,9 @@ public class Item implements Serializable {
 }
 ~~~
 
-#### 深度分页
+### 4、深度分页
+
 ~~~java
-	
 int pageSize = 10;
 int currentPage = 1;
 
@@ -57,7 +67,8 @@ List<Item> dataList = page.get().collect(Collectors.toList());
 System.out.println(dataList);
 ~~~
 
-#### 打印DSL日志
+### 5、打印DSL日志
+
 ~~~xml
 <logger name="org.springframework.data.elasticsearch.core.QUERY" level="DEBUG"/>
 ~~~
