@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.DefaultResultMapper;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.EntityMapper;
+import org.springframework.data.elasticsearch.core.ResultsExtractor;
 import org.springframework.data.elasticsearch.core.ResultsMapper;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
@@ -268,4 +269,31 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 		return searchTimeout == null ? response.actionGet() : response.actionGet(searchTimeout);
 	}
 
+	/**
+	 * search after aggregation
+	 * @param query
+	 * @param searchAfters
+	 * @param resultsExtractor
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public <T> T searchAfterAggregation(SearchQuery query, List<SortBuilder> sorts, Object[] searchAfters, 
+			Integer pageSize, ResultsExtractor<T> resultsExtractor) {
+		SearchRequestBuilder requestBuilder = prepareSearch(query);
+		
+		if(null != searchAfters && searchAfters.length > 0) {
+			requestBuilder.searchAfter(searchAfters);	
+		}
+		
+		if(null != sorts && sorts.size() > 0) {
+			sorts.forEach(sort -> {
+				requestBuilder.addSort(sort);
+			});
+		}
+		
+		requestBuilder.setSize(pageSize);
+		
+		SearchResponse response = doSearch(requestBuilder, query);
+		return resultsExtractor.extract(response);
+	}
 }
