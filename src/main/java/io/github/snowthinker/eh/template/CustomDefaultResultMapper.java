@@ -231,11 +231,11 @@ public class CustomDefaultResultMapper extends DefaultResultMapper {
 	
 	/**
 	 * <p>如果document存在 actualIndex 字段则将索引名称写入该字段
-	 * @param result
-	 * @param hit
-	 * @param clazz
+	 * @param result the result
+	 * @param hit the hit
+	 * @param clazz the result class type
 	 */
-	public <T> void setPartitionInfo(T result, SearchHit hit, Class<T> clazz) {
+	private <T> void setPartitionInfo(T result, SearchHit hit, Class<T> clazz) {
 		if(clazz.isAnnotationPresent(Document.class)) {
 			try {
 				PropertyDescriptor targetPropDesc = BeanUtils.getPropertyDescriptor(result.getClass(), "actualIndex");

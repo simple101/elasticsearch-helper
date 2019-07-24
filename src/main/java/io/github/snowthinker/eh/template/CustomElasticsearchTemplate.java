@@ -96,7 +96,7 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 	 * @param searchAfters	第一页可为空，剩余页不能为空
 	 * @param pageSize	分页大小
 	 * @param clazz		要转换的结果类
-	 * @return Page<T>	分页结果
+	 * @return Page	分页结果
 	 */
 	public <T> AggregatedPage<T> searchAfter(SearchQuery query, List<SortBuilder<?>> sorts, 
 			Object[] searchAfters, Integer pageSize, Class<T> clazz) {

@@ -5,7 +5,7 @@
 
 	<groupId>io.github.snowthinker</groupId>
 	<artifactId>elasticsearch-helper</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>elasticsearch-partitioner</name>
