@@ -14,7 +14,7 @@
 <dependency>
     <groupId>io.github.snowthinker</groupId>
     <artifactId>elasticsearch-helper</artifactId>
-    <version>0.0.1-RELEASE</version>
+    <version>0.0.2-RELEASE</version>
 </dependency>
 ~~~
 
@@ -47,24 +47,27 @@ public class Item implements Serializable {
 
 ~~~java
 int pageSize = 10;
-int currentPage = 1;
 
 // 深度分页
 Object[] searchAfters = new Object[]{"Iphone", "_id"};
 
 // 排序必需和深度分页顺序相一致
-Order[] orders = new Order[2];
-orders[0] = Sort.Order.asc("name");
-orders[1] = Sort.Order.asc("_id");
+SortBuilder[] orders = new SortBuilder[2];
+orders[0] = SortBuilders.fieldSort("name.keyword").order(SortOrder.DESC);
+orders[1] = SortBuilders.fieldSort("id.keyword").order(SortOrder.DESC);
 
 // 条件查询
 QueryBuilder queryBuilder = QueryBuilders.termQuery("name", "Iphone");
+SearchQuery searchQuery = new NativeSearchQueryBuilder()
+		.withIndices("item")
+		.withQuery(queryBuilder)
+		.build();
 
-Pageable pageable = ElasticsearchPageHelper.pageable(pageSize, currentPage, orders)
-Page<Item> page = customElasticsearchTemplate.searchDeep(queryBuilder, pageable, Item.class, searchAfters);
+Page<Item> pageResult = customElasticsearchTemplate.searchAfter(searchQuery, Arrays.asList(orders), searchAfters, pageSize, Item.class);
 
-List<Item> dataList = page.get().collect(Collectors.toList());
-System.out.println(dataList);
+List<Item> dataList = pageResult.get().collect(Collectors.toList());
+
+log.info("Total Record: {}, page list: {}", pageResult.getTotalElements(), dataList);
 ~~~
 
 ### 5、打印DSL日志

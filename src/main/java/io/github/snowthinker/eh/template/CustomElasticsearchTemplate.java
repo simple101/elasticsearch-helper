@@ -8,7 +8,6 @@ import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -18,7 +17,6 @@ import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.DefaultResultMapper;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -31,7 +29,6 @@ import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchC
 import org.springframework.data.elasticsearch.core.facet.FacetRequest;
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
 import org.springframework.data.elasticsearch.core.query.IndexBoost;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.data.elasticsearch.core.query.ScriptField;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -92,17 +89,63 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 		
 	}
 	
-	public <T> AggregatedPage<T> searchDeep(QueryBuilder query, Pageable pageable, Class<T> clazz, Object... afterSearch) {
-		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withPageable(pageable).build();
-		SearchRequestBuilder requestBuilder = prepareSearch(searchQuery, clazz);
+	/**
+	 * <p>Search after
+	 * @param query	查询条件
+	 * @param sorts 排序为必传条件
+	 * @param searchAfters	第一页可为空，剩余页不能为空
+	 * @param pageSize	分页大小
+	 * @param clazz		要转换的结果类
+	 * @return Page<T>	分页结果
+	 */
+	public <T> AggregatedPage<T> searchAfter(SearchQuery query, List<SortBuilder<?>> sorts, 
+			Object[] searchAfters, Integer pageSize, Class<T> clazz) {
+		SearchRequestBuilder requestBuilder = prepareSearch(query, clazz);
 		
-		// deep search, add after_search conditions
-		if(null != afterSearch && afterSearch.length > 0) {
-			requestBuilder.searchAfter(afterSearch);	
+		if(null != searchAfters && searchAfters.length > 0) {
+			requestBuilder.searchAfter(searchAfters);	
 		}
 		
-		SearchResponse response = doSearch(requestBuilder, searchQuery);
-		return resultsMapper.mapResults(response, clazz, pageable);
+		if(null != sorts && sorts.size() > 0) {
+			sorts.forEach(sort -> {
+				requestBuilder.addSort(sort);
+			});
+		}
+		
+		requestBuilder.setSize(pageSize);
+		
+		SearchResponse response = doSearch(requestBuilder, query);
+		return resultsMapper.mapResults(response, clazz, null);
+	}
+	
+	/**
+	 * <p>search after with aggregation
+	 * @param query	查询条件
+	 * @param sorts	排序
+	 * @param searchAfters	search after 数组
+	 * @param pageSize	分页大小
+	 * @param resultsExtractor	结果抽取器
+	 * @return T
+	 */
+	@SuppressWarnings("rawtypes")
+	public <T> T searchAfterAggregation(SearchQuery query, List<SortBuilder> sorts, Object[] searchAfters, 
+			Integer pageSize, ResultsExtractor<T> resultsExtractor) {
+		SearchRequestBuilder requestBuilder = prepareSearch(query);
+		
+		if(null != searchAfters && searchAfters.length > 0) {
+			requestBuilder.searchAfter(searchAfters);	
+		}
+		
+		if(null != sorts && sorts.size() > 0) {
+			sorts.forEach(sort -> {
+				requestBuilder.addSort(sort);
+			});
+		}
+		
+		requestBuilder.setSize(pageSize);
+		
+		SearchResponse response = doSearch(requestBuilder, query);
+		return resultsExtractor.extract(response);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -267,33 +310,5 @@ public class CustomElasticsearchTemplate extends ElasticsearchTemplate {
 	
 	private SearchResponse getSearchResponse(ActionFuture<SearchResponse> response) {
 		return searchTimeout == null ? response.actionGet() : response.actionGet(searchTimeout);
-	}
-
-	/**
-	 * search after aggregation
-	 * @param query
-	 * @param searchAfters
-	 * @param resultsExtractor
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	public <T> T searchAfterAggregation(SearchQuery query, List<SortBuilder> sorts, Object[] searchAfters, 
-			Integer pageSize, ResultsExtractor<T> resultsExtractor) {
-		SearchRequestBuilder requestBuilder = prepareSearch(query);
-		
-		if(null != searchAfters && searchAfters.length > 0) {
-			requestBuilder.searchAfter(searchAfters);	
-		}
-		
-		if(null != sorts && sorts.size() > 0) {
-			sorts.forEach(sort -> {
-				requestBuilder.addSort(sort);
-			});
-		}
-		
-		requestBuilder.setSize(pageSize);
-		
-		SearchResponse response = doSearch(requestBuilder, query);
-		return resultsExtractor.extract(response);
 	}
 }
