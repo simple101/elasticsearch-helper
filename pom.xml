@@ -5,7 +5,7 @@
 
 	<groupId>io.github.snowthinker</groupId>
 	<artifactId>elasticsearch-helper</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>elasticsearch-partitioner</name>
@@ -68,7 +68,7 @@
 		<dependency>
 		    <groupId>io.github.snowthinker</groupId>
 		    <artifactId>pojo-helper</artifactId>
-		    <version>0.0.3-SNAPSHOT</version>
+		    <version>0.0.3-RELEASE</version>
 		</dependency>
 		
 		<dependency>
