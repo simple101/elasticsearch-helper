@@ -15,6 +15,7 @@ import org.elasticsearch.action.get.MultiGetResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchSortValues;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.ElasticsearchException;
@@ -97,6 +98,8 @@ public class CustomDefaultResultMapper extends DefaultResultMapper {
 				setPersistentEntityScore(result, hit.getScore(), clazz);
 				
 				setPartitionInfo(result, hit, clazz);
+
+				setPersistentEntitySort(result, hit, clazz);
 				
 				populateScriptFields(result, hit);
 				results.add(result);
@@ -241,6 +244,30 @@ public class CustomDefaultResultMapper extends DefaultResultMapper {
 				PropertyDescriptor targetPropDesc = BeanUtils.getPropertyDescriptor(result.getClass(), "actualIndex");
 				if(null != targetPropDesc) {
 					targetPropDesc.getWriteMethod().invoke(result, hit.getIndex());
+				}
+			} catch (Exception e) {
+				log.error("Write method error", e);
+			}
+		}
+	}
+
+	/**
+	 * <p>设置深度分页排序字段</p>
+	 * @param result
+	 * @param hit
+	 * @param clazz
+	 * @param <T>
+	 */
+	private <T> void setPersistentEntitySort(T result, SearchHit hit, Class<T> clazz) {
+		if(clazz.isAnnotationPresent(Document.class)) {
+			try {
+				if(null == hit.getSortValues() || hit.getSortValues().length == 0) {
+					return;
+				}
+
+				PropertyDescriptor targetPropDesc = BeanUtils.getPropertyDescriptor(result.getClass(), "sortValues");
+				if(null != targetPropDesc) {
+					targetPropDesc.getWriteMethod().invoke(result, (Object)hit.getSortValues());
 				}
 			} catch (Exception e) {
 				log.error("Write method error", e);
